@@ -70,32 +70,39 @@ function finalizarCompra(carrito) {
     }
 }
 
-function listar(productos, propiedad1, propiedad2) {
-    return productos.map(producto => producto[propiedad1] + " - " + producto[propiedad2]).join("\n")
+function listar(productos, propiedad1, propiedad2, propiedad3) {
+    if (propiedad3 != undefined) {
+        return productos.map(producto => producto[propiedad1] + " - " + producto[propiedad2] + " - " + producto[propiedad3]).join("\n")
+    }
+    else {
+        return productos.map(producto => producto[propiedad1] + " - " + producto[propiedad2]).join("\n")
+    }
 }
 
 function agregarProductoAlCarrito(productos, carrito) {
-    let id = Number(prompt("Seleccione producto por id:\n" + listar(productos)))
-    let productoBuscado = productos.find(producto => producto.id === id)
-    let productoEnCarrito = carrito.find(producto => producto.id === productoBuscado.id)
+    do {
 
+        let id = Number(prompt("Seleccione producto por id:\n" + listar(productos, "id", "nombre", "precio")))
+        let productoBuscado = productos.find(producto => producto.id === id)
+        let productoEnCarrito = carrito.find(producto => producto.id === productoBuscado.id)
 
-if (productoBuscado.stock > 0) {
-    if (productoEnCarrito) {
-        productoEnCarrito.unidades++
-        productoEnCarrito.subtotal = productoEnCarrito.unidades * productoEnCarrito.precioUnitario
-    } else {
-        carrito.push({
-            id: productoBuscado.id,
-            nombre: productoBuscado.nombre,
-            precioUnitario: productoBuscado.precio,
-            unidades: 1,
-            subtotal: productoBuscado.precio
-        })
-    }
-    productoBuscado.stock--
-    alert("Se agregó producto al carrito")
-} else {
-    alert("No hay más stock del producto seleccionado")
-}
+        if (productoBuscado.stock > 0) {
+            if (productoEnCarrito) {
+                productoEnCarrito.unidades++
+                productoEnCarrito.subtotal = productoEnCarrito.unidades * productoEnCarrito.precioUnitario
+            } else {
+                carrito.push({
+                    id: productoBuscado.id,
+                    nombre: productoBuscado.nombre,
+                    precioUnitario: productoBuscado.precio,
+                    unidades: 1,
+                    subtotal: productoBuscado.precio
+                })
+            }
+            productoBuscado.stock--
+            alert("Se agregó producto al carrito")
+        } else {
+            alert("No hay más stock del producto seleccionado")
+        }
+    }while (1 == Number(prompt("Ingrese 1 para continuar o 2 para finalizar su compra.")))
 }
